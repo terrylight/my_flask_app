@@ -1,0 +1,17 @@
+.mpesa-info {
+  background-color: #f0f8f5;
+  padding: 20px;
+  border: 1px solid #00c853;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.mpesa-info h3 {
+  color: #00c853;
+  margin-bottom: 10px;
+}
+
+.mpesa-info p {
+  margin: 5px 0;
+  font-size: 16px;
+}

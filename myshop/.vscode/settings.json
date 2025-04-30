@@ -1,0 +1,7 @@
+{
+    "npm-intellisense.importES6": true,
+    "npm-intellisense.importQuotes": "double",
+    "npm-intellisense.showBuildInLibs": true,
+    "npm-intellisense.autoPackageSuggestions": true
+  }
+  

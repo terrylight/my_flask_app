@@ -1,0 +1,206 @@
+// 📁 Hero.css
+.hero-section {
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  color: white;
+  text-align: center;
+  padding: 60px 20px;
+  border-radius: 12px;
+  margin: 20px auto;
+}
+
+.hero-section .button {
+  margin-top: 20px;
+  display: inline-block;
+  background-color: #fff;
+  color: #2575fc;
+  padding: 12px 24px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.hero-section .button:hover {
+  background-color: #f0f0f0;
+  color: #6a11cb;
+}
+
+
+// 📁 FeaturedProducts.js (updated)
+import React from 'react';
+import './FeaturedProducts.css';
+
+const products=[ {
+  id: 1, name: 'Smart Watch', price: '$120', image: 'https://via.placeholder.com/150'
+}
+
+,
+{
+id: 2, name: 'Bluetooth Speaker', price: '$80', image: 'https://via.placeholder.com/150'
+}
+
+,
+{
+id: 3, name: 'Fitness Tracker', price: '$99', image: 'https://via.placeholder.com/150'
+}
+
+,
+];
+
+const FeaturedProducts=()=> {
+  return (<section className="section featured-products" id="featured" > <h2>Featured Products</h2> <div className="product-grid" > {
+      products.map(product=> (<div key= {
+            product.id
+          }
+
+          className="product-card" > <img src= {
+            product.image
+          }
+
+          alt= {
+            product.name
+          }
+
+          /> <h4> {
+            product.name
+          }
+
+          </h4> <p> {
+            product.price
+          }
+
+          </p> </div>))
+    }
+
+    </div> </section>);
+}
+
+;
+
+export default FeaturedProducts;
+
+
+// 📁 FeaturedProducts.css
+.featured-products {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.product-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.product-card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 150px;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+
+// 📁 Footer.css
+.footer {
+  background-color: #20232a;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  border-top: 2px solid #444;
+}
+
+.footer a {
+  color: #61dafb;
+  margin: 0 10px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: #21a1f1;
+}
+
+
+// Optional: Dark Mode Toggle in Header.js (bonus feature)
+import React,
+{
+useState,
+useEffect
+}
+
+from 'react';
+import './Header.css';
+
+const Header=()=> {
+  const [darkMode,
+  setDarkMode]=useState(false);
+
+  useEffect(()=> {
+      document.body.className=darkMode ? 'dark-mode' : '';
+    }
+
+    , [darkMode]);
+
+  return (<header className="header" > <h1>MyShop</h1> <button className="dark-toggle" onClick= {
+      ()=> setDarkMode( !darkMode)
+    }
+
+    > {
+      darkMode ? '🌞 Light' : '🌙 Dark'
+    }
+
+    </button> </header>);
+}
+
+;
+
+export default Header;
+
+
+// 📁 Header.css
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #282c34;
+  color: white;
+}
+
+.dark-toggle {
+  background: none;
+  border: 2px solid #fff;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.dark-mode .header {
+  background-color: #1f1f1f;
+}
+
+.dark-mode .product-card,
+.dark-mode .footer {
+  background-color: #2b2b2b;
+  color: white;
+}

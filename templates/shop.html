@@ -1,0 +1,184 @@
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { ShoppingCart } from "lucide-react";
+
+const categories = [
+  "All", "Electronics", "Clothing", "Home Appliances", "Accessories",
+  "Books", "Toys", "Beauty", "Sports", "Groceries", "Health"
+];
+
+const brands = [
+  "All", "Samsung", "Apple", "Sony", "LG", "Adidas",
+  "Nike", "HP", "Dell", "Puma", "Lenovo"
+];
+
+const products = [
+  { id: 1, name: "Samsung TV", category: "Electronics", brand: "Samsung", price: 300 },
+  { id: 2, name: "Nike Shoes", category: "Clothing", brand: "Nike", price: 120 },
+  { id: 3, name: "LG Fridge", category: "Home Appliances", brand: "LG", price: 500 },
+];
+
+const Shop = () => {
+  const [cart, setCart] = useState<any[]>([]);
+  const [filterCategory, setFilterCategory] = useState("All");
+  const [filterBrand, setFilterBrand] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [mpesaNumber, setMpesaNumber] = useState("");
+
+  const filteredProducts = products.filter((product) => {
+    const categoryMatch = filterCategory === "All" || product.category === filterCategory;
+    const brandMatch = filterBrand === "All" || product.brand === filterBrand;
+    const searchMatch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return categoryMatch && brandMatch && searchMatch;
+  });
+
+  const addToCart = (product: any) => setCart((prevCart) => [...prevCart, product]);
+  const removeFromCart = (id: number) => setCart(cart.filter((item) => item.id !== id));
+  const handleMpesaPayment = () => {
+    if (!mpesaNumber) return alert("Enter your M-PESA number");
+    alert(`STK push sent to ${mpesaNumber}. Complete payment to Till +254705855677.`);
+  };
+  const handleCardPayment = () => alert("Redirecting to secure Visa/Mastercard gateway...");
+  const handlePayPalPayment = () => alert("Redirecting to PayPal checkout...");
+
+  return (
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">My E-Shop</h1>
+        <div className="flex items-center gap-4">
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search products..."
+            className="w-64"
+          />
+          <Button onClick={() => setIsAdmin(!isAdmin)} variant="outline">
+            {isAdmin ? "Switch to User" : "Switch to Admin"}
+          </Button>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2">
+                <ShoppingCart /> View Cart ({cart.length})
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <h2 className="text-xl font-semibold mb-4">Your Cart</h2>
+              {cart.map((item) => (
+                <div key={item.id} className="flex justify-between items-center mb-2">
+                  <span>{item.name}</span>
+                  <Button size="sm" variant="destructive" onClick={() => removeFromCart(item.id)}>
+                    Remove
+                  </Button>
+                </div>
+              ))}
+              <div className="mt-6 space-y-4">
+                <h3 className="text-lg font-semibold">Payment Options</h3>
+                <div>
+                  <Label>M-PESA Number:</Label>
+                  <Input
+                    value={mpesaNumber}
+                    onChange={(e) => setMpesaNumber(e.target.value)}
+                    placeholder="e.g. 07XXXXXXXX"
+                  />
+                  <Button className="mt-2 w-full" onClick={handleMpesaPayment}>
+                    Pay with MPESA
+                  </Button>
+                </div>
+                <Button variant="outline" className="w-full" onClick={handlePayPalPayment}>
+                  Pay with PayPal
+                </Button>
+                <Button variant="outline" className="w-full" onClick={handleCardPayment}>
+                  Pay with Visa/MasterCard
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="flex gap-4">
+        <Select value={filterCategory} onValueChange={setFilterCategory}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Select Category" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((cat) => (
+              <SelectItem key={cat} value={cat}>
+                {cat}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={filterBrand} onValueChange={setFilterBrand}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Select Brand" />
+          </SelectTrigger>
+          <SelectContent>
+            {brands.map((brand) => (
+              <SelectItem key={brand} value={brand}>
+                {brand}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Product Listing */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {filteredProducts.map((product) => (
+          <Card key={product.id}>
+            <CardContent className="p-4 space-y-2">
+              <h2 className="text-lg font-bold">{product.name}</h2>
+              <p className="text-sm text-muted-foreground">Brand: {product.brand}</p>
+              <p className="text-lg font-semibold">KSh {product.price}</p>
+              <Button onClick={() => addToCart(product)}>Add to Cart</Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Admin and Account Tabs */}
+      <Tabs defaultValue="user" className="w-full mt-10">
+        <TabsList className="grid grid-cols-2">
+          <TabsTrigger value="admin">Admin Dashboard</TabsTrigger>
+          <TabsTrigger value="user">User Dashboard</TabsTrigger>
+        </TabsList>
+        <TabsContent value="admin">
+          <div className="space-y-2">
+            <p>📦 View Orders</p>
+            <p>👥 Manage Customers</p>
+            <p>💳 Payment Tracking</p>
+            <p>📊 Inventory Management</p>
+            <p>⚙️ System Settings</p>
+            <p>📈 Reports & Analytics</p>
+          </div>
+        </TabsContent>
+        <TabsContent value="user">
+          <div className="space-y-2">
+            <p>🔐 Sign In / Sign Up</p>
+            <p>📦 My Orders</p>
+            <p>💬 Support Tickets</p>
+            <p>💳 Saved Payments</p>
+            <p>⚙️ Account Settings</p>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      {/* Live Chat */}
+      <div className="fixed bottom-6 right-6">
+        <Button variant="outline">💬 Live Chat</Button>
+      </div>
+    </div>
+  );
+};
+
+export default Shop;

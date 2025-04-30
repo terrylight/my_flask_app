@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cherie's Electrical and Electronics - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+      box-sizing: border-box;
+    }
+
+    /* Header Section */
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 30px 0;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 50px;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .navbar {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .navbar a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(to right, #3498db, #8e44ad);
+      color: white;
+      padding: 100px 0;
+      text-align: center;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .hero-section h2 {
+      font-size: 70px;
+      margin-bottom: 20px;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .hero-section p {
+      font-size: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+      margin-bottom: 30px;
+    }
+
+    .button {
+      background-color: #ff7f50;
+      color: white;
+      padding: 15px 30px;
+      text-decoration: none;
+      font-size: 20px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #ff6347;
+    }
+
+    /* Section Styling */
+    .section {
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    .section h2 {
+      font-size: 36px;
+      margin-bottom: 40px;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    /* Featured Products Section */
+    .product-card {
+      display: inline-block;
+      width: 22%;
+      margin: 15px;
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .product-card h3 {
+      font-size: 24px;
+      margin-top: 15px;
+    }
+
+    .product-card p {
+      font-size: 18px;
+      color: #e67e22;
+    }
+
+    /* About Section */
+    .about-section {
+      background-color: #ecf0f1;
+      padding: 50px 20px;
+      text-align: center;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-section h2 {
+      font-size: 36px;
+      margin-bottom: 30px;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .about-section p {
+      font-size: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Footer Section */
+    .footer {
+      background-color: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 50px;
+    }
+
+    .footer a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>Cherie's Electrical and Electronics</h1>
+    <div class="navbar">
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('about') }}">About</a>
+      <a href="{{ url_for('contact') }}">Contact</a>
+      <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('register') }}">Sign Up</a>
+      <a href="{{ url_for('shop') }}">Shop</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h2>Welcome to Cherie's Electrical & Electronics</h2>
+    <p>Your trusted source for quality electronics and electrical appliances</p>
+    <a href="{{ url_for('shop') }}" class="button">Browse Our Shop</a>
+  </div>
+
+  <!-- Featured Products Section -->
+  <div class="section">
+    <h2>Featured Products</h2>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/300x200?text=Electric+Kettle" alt="Electric Kettle">
+      <h3>Electric Kettle</h3>
+      <p>$45</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/300x200?text=Washing+Machine" alt="Washing Machine">
+      <h3>Washing Machine</h3>
+      <p>$350</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/300x200?text=Refrigerator" alt="Refrigerator">
+      <h3>Refrigerator</h3>
+      <p>$500</p>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/300x200?text=LED+TV" alt="LED TV">
+      <h3>LED TV</h3>
+      <p>$700</p>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <div class="about-section">
+    <h2>About Teresia</h2>
+    <p>Teresia is passionate about providing high-quality electrical and electronic products to make your home more
+      comfortable. With years of experience, Cherie's Electrical and Electronics aims to be your go-to source for
+      reliable and affordable products. We're dedicated to customer satisfaction and offer a range of products that fit
+      your needs.</p>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="footer">
+    <p>Contact Us: email@example.com | Phone: 123-456-7890</p>
+    <p>Follow us on Social Media:</p>
+    <a href="#">Facebook</a> | <a href="#">Instagram</a> | <a href="#">Twitter</a>
+  </div>
+
+</body>
+
+</html>
