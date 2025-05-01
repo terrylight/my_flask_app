@@ -37,9 +37,11 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=True)
 
-# Initialize database tables
-with app.app_context():
-    db.create_all()
+# Initialize database tables (if not already created)
+@app.before_first_request
+def create_tables():
+    with app.app_context():
+        db.create_all()
 
 # User loader
 @login_manager.user_loader
