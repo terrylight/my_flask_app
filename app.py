@@ -137,11 +137,20 @@ def terms():
 
 @app.route('/privacy-policy')
 def privacy_policy():
-    return render_template('privacy_policy.html')  # You should create this page
+    return render_template('privacy.html')  # You should create this page
 
 @app.route('/shipping')
 def shipping():
     return render_template('shipping.html')  # You should create this page
+
+# New routes for support and privacy policy
+@app.route('/support')
+def support():
+    return render_template('support.html')  # Create support.html page
+
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')  # Create privacy.html page
 
 # Only for local testing
 if __name__ == "__main__":
