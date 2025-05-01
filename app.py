@@ -18,6 +18,19 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+# Initialize database tables (with error handling)
+def create_tables():
+    try:
+        with app.app_context():
+            db.create_all()
+            print("✅ Database tables created or already exist.")
+    except Exception as e:
+        print(f"❌ Error creating database tables: {e}")
+
+# Call the create_tables function
+create_tables()
+
+
 # User model
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,12 +49,6 @@ class Product(db.Model):
     name = db.Column(db.String(120), nullable=False)
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=True)
-
-# Initialize database tables (if not already created)
-@app.before_first_request
-def create_tables():
-    with app.app_context():
-        db.create_all()
 
 # User loader
 @login_manager.user_loader
@@ -123,7 +130,6 @@ def logout():
 
 @app.route('/blog-post/<int:id>')
 def blog_post(id):
-    # Fetch the blog post based on the ID and display it
     return render_template('blog_post.html', post_id=id)
 
 @app.route('/subscribe', methods=['POST'])
@@ -135,24 +141,23 @@ def subscribe():
 
 @app.route('/terms')
 def terms():
-    return render_template('terms.html')  # You should create this page
+    return render_template('terms.html')  # Create terms.html
 
 @app.route('/privacy-policy')
 def privacy_policy():
-    return render_template('privacy.html')  # You should create this page
+    return render_template('privacy.html')  # Create privacy.html
 
 @app.route('/shipping')
 def shipping():
-    return render_template('shipping.html')  # You should create this page
+    return render_template('shipping.html')  # Create shipping.html
 
-# New routes for support and privacy policy
 @app.route('/support')
 def support():
-    return render_template('support.html')  # Create support.html page
+    return render_template('support.html')  # Create support.html
 
 @app.route('/privacy')
 def privacy():
-    return render_template('privacy.html')  # Create privacy.html page
+    return render_template('privacy.html')  # Create privacy.html
 
 # Only for local testing
 if __name__ == "__main__":
