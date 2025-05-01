@@ -254,10 +254,8 @@
         <li><a href="{{ url_for('home') }}">Home</a></li>
         <li><a href="{{ url_for('about') }}">About</a></li>
         <li><a href="{{ url_for('shop') }}">Shop</a></li>
-        <li><a href="{{ url_for('services') }}">Services</a></li>
         <li><a href="{{ url_for('support') }}">Support</a></li>
         <li><a href="{{ url_for('contact') }}">Contact</a></li>
-        <li><a href="{{ url_for('account') }}">Account</a></li>
       </ul>
     </nav>
   </header>
@@ -277,24 +275,23 @@
     <p>Explore our wide range of electrical and electronic products.</p>
     <a href="{{ url_for('shop') }}" class="button">Browse Categories</a>
   </section>
-
   <!-- Featured Products -->
   <section id="featured-products">
     <h2>Featured Products</h2>
     <div class="product-list">
       <div class="product">
         <h3>Product 1</h3>
-        <p>High quality product description</p>
+        <p>High quality product description.</p>
         <button>Add to Cart</button>
       </div>
       <div class="product">
         <h3>Product 2</h3>
-        <p>High quality product description</p>
+        <p>Another high quality product description.</p>
         <button>Add to Cart</button>
       </div>
       <div class="product">
         <h3>Product 3</h3>
-        <p>High quality product description</p>
+        <p>Yet another high quality product description.</p>
         <button>Add to Cart</button>
       </div>
     </div>
@@ -315,6 +312,12 @@
       <p>"Great customer support! They helped me with all my questions."</p>
       <footer>- Michael Brown</footer>
     </div>
+
+    <h2>More Customer Experiences</h2>
+    <div class="testimonial">
+      <p>"Cherie's Electrical offers the best service and products. Their team is professional and knowledgeable!"</p>
+      <footer>- Happy Customer</footer>
+    </div>
   </section>
 
   <!-- Latest Blog Posts -->
@@ -323,22 +326,13 @@
     <div class="blog-post">
       <h3>How to Choose the Right Electrical Appliances for Your Home</h3>
       <p>Learn the best tips for selecting quality electrical appliances that suit your home...</p>
-      <a href="{{ url_for('blog_post', id=1)
-      <!-- Testimonials -->
-      <section id=" testimonials">
-        <h2>What Our Customers Say</h2>
-        <div class="testimonial">
-          "Cherie's Electrical offers the best service and products. Their team is professional and knowledgeable!"
-          <footer>- Happy Customer</footer>
-        </div>
-  </section>
+      <a href="{{ url_for('blog_post', id=1) }}" class="button">Read More</a>
+    </div>
 
-  <!-- Blog / News Section -->
-  <section id="blog">
-    <h2>From Our Blog</h2>
     <div class="blog-post">
       <h3>Top 10 Electrical Upgrades for Your Home</h3>
       <p>Discover essential upgrades to improve safety, efficiency, and modernize your living space.</p>
+      <a href="{{ url_for('blog_post', id=2) }}" class="button">Read More</a>
     </div>
   </section>
 

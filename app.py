@@ -159,7 +159,15 @@ def support():
 def privacy():
     return render_template('privacy.html')  # Create privacy.html
 
+@app.route('/services')
+def services():
+    return render_template('services.html')
+
+@app.route('/account')
+def account():
+    return render_template('account.html')
+
 # Only for local testing
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)
