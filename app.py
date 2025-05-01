@@ -6,8 +6,8 @@ import os
 
 # Flask app setup
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'mysecretkey'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'  # SQLite database file
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'mysecretkey')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///site.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Database setup
@@ -16,9 +16,9 @@ bcrypt = Bcrypt(app)
 
 # Login manager setup
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'  # Redirect to 'login' if not authenticated
+login_manager.login_view = 'login'
 
-# User model for authentication
+# User model
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
@@ -30,9 +30,6 @@ class ContactForm(db.Model):
     name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), nullable=False)
 
-    def __repr__(self):
-        return f"ContactForm('{self.name}', '{self.email}')"
-
 # Product model
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,108 +37,87 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=True)
 
-    def __repr__(self):
-        return f"Product('{self.name}', {self.price})"
-
 # Initialize database tables
 with app.app_context():
     db.create_all()
 
-# User loader for Flask-Login
+# User loader
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Routes for the app
+# Routes
 
-# Home route
 @app.route('/')
 def home():
     return render_template('home.html')
 
-# About route
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-# Contact route (displaying the contact form)
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
-
         new_entry = ContactForm(name=name, email=email)
         db.session.add(new_entry)
         db.session.commit()
-
         flash(f"Thank you for contacting us, {name}! We'll respond to {email} soon.", 'success')
         return redirect(url_for('contact'))
     return render_template('contact.html')
 
-# Shop route (displaying the products)
 @app.route('/shop')
 def shop():
     products = Product.query.all()
     return render_template('shop.html', products=products)
 
-# User Registration Route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-
-        # Check if user already exists
         user = User.query.filter_by(username=username).first()
         if user:
-            flash('Username already exists. Please choose a different one.', 'danger')
+            flash('Username already exists.', 'danger')
             return redirect(url_for('register'))
-
         new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-
-        flash('Your account has been created! You can now log in.', 'success')
+        flash('Registration successful.', 'success')
         return redirect(url_for('login'))
-
     return render_template('register.html')
 
-# User Login Route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
         user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user)
-            flash('Login successful!', 'success')
+            flash('Login successful.', 'success')
             return redirect(url_for('dashboard'))
         else:
-            flash('Login unsuccessful. Check username and password.', 'danger')
+            flash('Login failed. Check username and password.', 'danger')
             return redirect(url_for('login'))
-
     return render_template('login.html')
 
-# User Dashboard Route
 @app.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('dashboard.html')
 
-# User Logout Route
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.', 'info')
+    flash('Logged out successfully.', 'info')
     return redirect(url_for('login'))
 
-# Running the application
+# Only for local testing
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get('PORT', 5000))
     app.run(host="0.0.0.0", port=port)
