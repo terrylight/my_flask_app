@@ -3,110 +3,170 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cherie's Electrical and Electronics</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
 
-  <header>
-    <div class="container">
-      <h1 class="logo">Cherie's Electrical and Electronics</h1>
-      <nav>
-        <ul class="nav-links">
-          <li><a href="#">Home</a></li>
-          <li class="dropdown">About
-            <ul class="dropdown-content">
-              <li><a href="#">Our Story</a></li>
-              <li><a href="#">Our Team</a></li>
-              <li><a href="#">Careers</a></li>
-              <li><a href="#">Testimonials</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">Shop
-            <ul class="dropdown-content">
-              <li><a href="#">All Products</a></li>
-              <li><a href="#">Categories</a></li>
-              <li><a href="#">Best Sellers</a></li>
-              <li><a href="#">New Arrivals</a></li>
-              <li><a href="#">Promotions</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">Services
-            <ul class="dropdown-content">
-              <li><a href="#">Installation</a></li>
-              <li><a href="#">Repairs</a></li>
-              <li><a href="#">Consultations</a></li>
-              <li><a href="#">Warranty</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">Support
-            <ul class="dropdown-content">
-              <li><a href="#">FAQ</a></li>
-              <li><a href="#">Help Center</a></li>
-              <li><a href="#">Track Order</a></li>
-              <li><a href="#">Return Policy</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">Contact
-            <ul class="dropdown-content">
-              <li><a href="#">Contact Form</a></li>
-              <li><a href="#">Find a Store</a></li>
-              <li><a href="#">WhatsApp Support</a></li>
-            </ul>
-          </li>
-          <li class="dropdown">Account
-            <ul class="dropdown-content">
-              <li><a href="#">Login</a></li>
-              <li><a href="#">Register</a></li>
-              <li><a href="#">Dashboard</a></li>
-              <li><a href="#">Orders</a></li>
-            </ul>
-          </li>
+  <!-- Navigation Bar -->
+  <nav>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Shop</a>
+        <ul>
+          <li><a href="#">All Products</a></li>
+          <li><a href="#">Categories</a></li>
+          <li><a href="#">Best Sellers</a></li>
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Promotions</a></li>
         </ul>
-      </nav>
+      </li>
+      <li><a href="#">Services</a>
+        <ul>
+          <li><a href="#">Installation</a></li>
+          <li><a href="#">Repairs</a></li>
+          <li><a href="#">Consultations</a></li>
+          <li><a href="#">Warranty</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Support</a>
+        <ul>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">Return Policy</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Contact</a>
+        <ul>
+          <li><a href="#">Contact Form</a></li>
+          <li><a href="#">Find a Store</a></li>
+          <li><a href="#">WhatsApp Support</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Account</a>
+        <ul>
+          <li><a href="#">Login</a></li>
+          <li><a href="#">Register</a></li>
+          <li><a href="#">Dashboard</a></li>
+          <li><a href="#">Orders</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Banner Section -->
+  <section class="main-banner">
+    <h1>Welcome to Cherie's Electrical and Electronics</h1>
+    <p>Your one-stop shop for high-quality electrical products and professional services.</p>
+    <a href="/shop" class="shop-now">Shop Now</a> <!-- Link to shop page -->
+  </section>
+
+  <!-- Product Categories Section -->
+  <section class="product-categories">
+    <h2>Product Categories</h2>
+    <p>Explore our wide range of electrical and electronic products.</p>
+    <a href="/categories" class="browse-categories">Browse Categories</a> <!-- Link to categories page -->
+  </section>
+
+  <!-- Featured Products Section -->
+  <section class="featured-products">
+    <h2>Featured Products</h2>
+    <div class="product-grid">
+      <!-- Example Product -->
+      <div class="product-card">
+        <img src="product1.jpg" alt="Product 1">
+        <h3>Product 1</h3>
+        <p>High quality product description</p>
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="product2.jpg" alt="Product 2">
+        <h3>Product 2</h3>
+        <p>High quality product description</p>
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="product3.jpg" alt="Product 3">
+        <h3>Product 3</h3>
+        <p>High quality product description</p>
+        <button class="add-to-cart">Add to Cart</button>
+      </div>
     </div>
-  </header>
+  </section>
 
-  <main>
-    <section class="hero">
-      <div class="container">
-        <h2>Welcome to Cherie's Electrical and Electronics</h2>
-        <p>Your one-stop shop for high-quality electrical products and professional services.</p>
-        <a href="#" class="btn">Shop Now</a>
+  <!-- Testimonials Section -->
+  <section class="testimonials">
+    <h2>What Our Customers Are Saying</h2>
+    <div class="testimonial-cards">
+      <div class="testimonial-card">
+        <p>"Excellent service! Fast delivery and great products. Highly recommend!"</p>
+        <span>- John Doe</span>
       </div>
-    </section>
+      <div class="testimonial-card">
+        <p>"The installation team was professional and efficient. Very happy with the service."</p>
+        <span>- Jane Smith</span>
+      </div>
+      <div class="testimonial-card">
+        <p>"Great customer support! They helped me with all my questions."</p>
+        <span>- Michael Brown</span>
+      </div>
+    </div>
+  </section>
 
-    <section class="features container">
-      <div class="feature-box">
-        <h3>Product Categories</h3>
-        <p>Explore our wide range of electrical and electronic products.</p>
-        <a href="#" class="btn">Browse Categories</a>
+  <!-- Latest Blog Posts Section -->
+  <section class="latest-blog">
+    <h2>Latest Blog Posts</h2>
+    <div class="blog-posts">
+      <div class="blog-post">
+        <h3>How to Choose the Right Electrical Appliances for Your Home</h3>
+        <p>Learn the best tips for selecting quality electrical appliances that suit your home...</p>
+        <a href="/blog-post/1">Read More</a>
       </div>
-      <div class="feature-box">
-        <h3>Expert Installation</h3>
-        <p>Our experts will handle installation and setup for you.</p>
-        <a href="#" class="btn">Learn More</a>
+      <div class="blog-post">
+        <h3>5 Essential Electrical Repairs Every Homeowner Should Know</h3>
+        <p>Discover common electrical repairs that homeowners can handle themselves...</p>
+        <a href="/blog-post/2">Read More</a>
       </div>
-      <div class="feature-box">
-        <h3>Customer Support</h3>
-        <p>We are here to assist with any inquiries you may have.</p>
-        <a href="#" class="btn">Contact Support</a>
-      </div>
-    </section>
-  </main>
+    </div>
+  </section>
 
+  <!-- Newsletter Subscription Section -->
+  <section class="newsletter">
+    <h2>Stay Updated with Our Latest Offers</h2>
+    <p>Subscribe to our newsletter and never miss an update!</p>
+    <form action="/subscribe" method="POST">
+      <input type="email" name="email" placeholder="Enter your email" required>
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+
+  <!-- Customer Support Section -->
+  <section class="customer-support">
+    <h2>Customer Support</h2>
+    <p>We are here to assist with any inquiries you may have.</p>
+    <a href="/support" class="contact-support">Contact Support</a> <!-- Link to contact support page -->
+  </section>
+
+  <!-- Footer -->
   <footer>
-    <div class="container">
-      <p>© 2025 Cherie's Electrical and Electronics. All rights reserved.</p>
-      <div class="social-links">
-        <a href="#">Facebook</a> |
-        <a href="#">Twitter</a> |
-        <a href="#">Instagram</a> |
-        <a href="#">LinkedIn</a>
-      </div>
+    <div class="footer-links">
+      <ul>
+        <li><a href="/terms">Terms & Conditions</a></li>
+        <li><a href="/privacy-policy">Privacy Policy</a></li>
+        <li><a href="/shipping">Shipping Information</a></li>
+      </ul>
     </div>
+    <div class="social-media">
+      <a href="https://www.facebook.com">Facebook</a> |
+      <a href="https://www.twitter.com">Twitter</a> |
+      <a href="https://www.instagram.com">Instagram</a> |
+      <a href="https://www.linkedin.com">LinkedIn</a>
+    </div>
+    <p>© 2025 Cherie's Electrical and Electronics. All rights reserved.</p>
   </footer>
 
 </body>

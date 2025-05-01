@@ -117,6 +117,32 @@ def logout():
     flash('Logged out successfully.', 'info')
     return redirect(url_for('login'))
 
+# New Routes
+
+@app.route('/blog-post/<int:id>')
+def blog_post(id):
+    # Fetch the blog post based on the ID and display it
+    return render_template('blog_post.html', post_id=id)
+
+@app.route('/subscribe', methods=['POST'])
+def subscribe():
+    email = request.form['email']
+    # Logic to save the email to your database or send a confirmation
+    flash(f"Subscription successful! Thank you for subscribing with {email}.", 'success')
+    return redirect(url_for('home'))
+
+@app.route('/terms')
+def terms():
+    return render_template('terms.html')  # You should create this page
+
+@app.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy_policy.html')  # You should create this page
+
+@app.route('/shipping')
+def shipping():
+    return render_template('shipping.html')  # You should create this page
+
 # Only for local testing
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
