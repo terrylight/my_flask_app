@@ -2,11 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
+import os
 
 # Flask app setup
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'mysecretkey'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'  # Set the database URI here
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'  # SQLite database file
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Database setup
@@ -15,7 +16,7 @@ bcrypt = Bcrypt(app)
 
 # Login manager setup
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'login'  # Redirect to 'login' if not authenticated
 
 # User model for authentication
 class User(UserMixin, db.Model):
@@ -46,7 +47,7 @@ class Product(db.Model):
 with app.app_context():
     db.create_all()
 
-# User loader
+# User loader for Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -67,14 +68,10 @@ def about():
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     if request.method == 'POST':
-        # Getting form data
         name = request.form['name']
         email = request.form['email']
 
-        # Create new contact form entry
         new_entry = ContactForm(name=name, email=email)
-
-        # Add the entry to the database
         db.session.add(new_entry)
         db.session.commit()
 
@@ -85,10 +82,7 @@ def contact():
 # Shop route (displaying the products)
 @app.route('/shop')
 def shop():
-    # Fetch all products from the database
     products = Product.query.all()
-
-    # Pass the products to the template
     return render_template('shop.html', products=products)
 
 # User Registration Route
@@ -100,13 +94,12 @@ def register():
 
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-        # Check if the user already exists
+        # Check if user already exists
         user = User.query.filter_by(username=username).first()
         if user:
             flash('Username already exists. Please choose a different one.', 'danger')
             return redirect(url_for('register'))
 
-        # Create new user and add to the database
         new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
@@ -123,14 +116,13 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        # Check if the user exists
         user = User.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user)
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
         else:
-            flash('Login unsuccessful. Check username and password', 'danger')
+            flash('Login unsuccessful. Check username and password.', 'danger')
             return redirect(url_for('login'))
 
     return render_template('login.html')
@@ -149,11 +141,7 @@ def logout():
     flash('You have been logged out.', 'info')
     return redirect(url_for('login'))
 
-# Running the application with Waitress
-if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1', port=5001)
-import os
-
+# Running the application
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Use PORT if set, else 5000
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
