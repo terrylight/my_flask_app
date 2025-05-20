@@ -270,103 +270,692 @@
     <div class="main-banner">
       <h1>Welcome to Cherie's Electrical and Electronics</h1>
       <p>Your trusted source for high-quality electrical products and professional services.</p>
-      <button class="shop-now">Shop Now</button>
+      <a href="{{ url_for('shop') }}" class="button shop-now" aria-label="Shop Now">Shop Now</a>
+      <div class="scroll-down" aria-label="Scroll down">
+        <svg width="36" height="36" fill="white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+          aria-hidden="true">
+          <path d="M12 16l-6-6h12z" />
+        </svg>
+      </div>
     </div>
-
   </section>
+
+  <style>
+    #hero {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 90vh;
+      background: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+      text-align: center;
+      color: white;
+      overflow: hidden;
+    }
+
+    /* Animated gradient overlay */
+    #hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(270deg, rgba(255, 111, 97, 0.5), rgba(0, 0, 0, 0.6), rgba(255, 111, 97, 0.5));
+      background-size: 600% 600%;
+      animation: gradientMove 15s ease infinite;
+      mix-blend-mode: multiply;
+      z-index: 1;
+    }
+
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .main-banner {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      padding: 0 20px;
+    }
+
+    #hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.85);
+    }
+
+    #hero p {
+      font-size: 1.25rem;
+      margin-bottom: 40px;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.75);
+      line-height: 1.5;
+    }
+
+    .button.shop-now {
+      padding: 18px 45px;
+      font-size: 1.125rem;
+      background-color: #ff6f61;
+      color: white;
+      border-radius: 8px;
+      text-transform: uppercase;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+      box-shadow: 0 6px 15px rgba(255, 111, 97, 0.6);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .button.shop-now:hover,
+    .button.shop-now:focus {
+      background-color: #e64a3d;
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(230, 74, 61, 0.8);
+      outline: none;
+    }
+
+    .scroll-down {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2.5s infinite;
+      cursor: pointer;
+      z-index: 2;
+      filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
+      transition: filter 0.3s;
+    }
+
+    .scroll-down:hover,
+    .scroll-down:focus {
+      filter: drop-shadow(0 0 6px rgba(255, 255, 255, 1));
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      50% {
+        transform: translateX(-50%) translateY(12px);
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      #hero h1 {
+        font-size: 2.25rem;
+      }
+
+      #hero p {
+        font-size: 1rem;
+        margin-bottom: 30px;
+      }
+
+      .button.shop-now {
+        padding: 14px 35px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+
+  <script>
+    document.querySelector('.scroll-down').addEventListener('click', () => {
+      document.querySelector('#categories').scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+
 
   <!-- Product Categories Section -->
   <section id="categories">
+    <div class="overlay"></div>
     <h2>Product Categories</h2>
     <p>Explore our wide range of electrical and electronic products.</p>
-    <a href="{{ url_for('shop') }}" class="button">Browse Categories</a>
+    <div class="categories-grid">
+      <a href="{{ url_for('shop') }}?category=wiring" class="category-card" tabindex="0">
+        <img src="https://img.icons8.com/ios-filled/100/ff6f61/electrical.png" alt="Wiring and Cables">
+        <h3>Wiring & Cables</h3>
+        <p>High-quality wiring and cables for every need.</p>
+      </a>
+      <a href="{{ url_for('shop') }}?category=lighting" class="category-card" tabindex="0">
+        <img src="https://img.icons8.com/ios-filled/100/ff6f61/led-light-bulb.png" alt="Lighting Solutions">
+        <h3>Lighting Solutions</h3>
+        <p>Bright and efficient lighting for home and office.</p>
+      </a>
+      <a href="{{ url_for('shop') }}?category=tools" class="category-card" tabindex="0">
+        <img src="https://img.icons8.com/ios-filled/100/ff6f61/tools.png" alt="Electrical Tools">
+        <h3>Electrical Tools</h3>
+        <p>Durable tools for installation and repairs.</p>
+      </a>
+    </div>
+    <a href="{{ url_for('shop') }}" class="button">Browse All Categories</a>
   </section>
 
+  <style>
+    #categories {
+      position: relative;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+      border-radius: 20px;
+      margin: 50px auto;
+      padding: 70px 50px 90px;
+      width: 80%;
+      max-width: 1200px;
+      color: #fff;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      background-attachment: fixed;
+    }
+
+    /* Animated electric gradient overlay */
+    #categories::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: linear-gradient(45deg, #ff6f61, #3af0f7, #ff6f61, #3af0f7);
+      background-size: 400% 400%;
+      animation: electricPulse 20s ease infinite;
+      opacity: 0.35;
+      z-index: 0;
+    }
+
+    @keyframes electricPulse {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    #categories .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(20, 20, 20, 0.65);
+      border-radius: 20px;
+      z-index: 1;
+    }
+
+    #categories h2,
+    #categories p,
+    #categories .button {
+      position: relative;
+      z-index: 2;
+      text-shadow: 0 3px 10px rgba(0, 0, 0, 0.85);
+    }
+
+    #categories h2 {
+      font-size: 40px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      letter-spacing: 1.3px;
+    }
+
+    #categories p {
+      font-size: 21px;
+      margin-bottom: 50px;
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+
+    .categories-grid {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      perspective: 1200px;
+    }
+
+    .category-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow:
+        0 10px 25px rgba(58, 240, 247, 0.45),
+        0 0 15px #ff6f61aa,
+        inset 0 0 15px #3af0f7aa;
+      width: 280px;
+      padding: 35px 25px;
+      text-decoration: none;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+      cursor: pointer;
+      transform-style: preserve-3d;
+    }
+
+    .category-card img {
+      width: 95px;
+      height: 95px;
+      margin-bottom: 22px;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+      transition: filter 0.3s ease;
+    }
+
+    .category-card h3 {
+      font-size: 27px;
+      margin-bottom: 14px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+    }
+
+    .category-card p {
+      font-size: 17px;
+      text-align: center;
+      color: #e8dedecc;
+      line-height: 1.4;
+    }
+
+    .category-card:hover,
+    .category-card:focus {
+      transform: translateY(-20px) rotateX(10deg) rotateY(10deg);
+      box-shadow:
+        0 30px 60px rgba(58, 240, 247, 0.85),
+        0 0 30px #ff6f6155,
+        inset 0 0 30px #3af0f7cc;
+      background: rgba(58, 240, 247, 0.9);
+      outline: none;
+    }
+
+    .category-card:hover img,
+    .category-card:focus img {
+      filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.8));
+    }
+
+    .button {
+      position: relative;
+      z-index: 2;
+      margin-top: 60px;
+      padding: 18px 44px;
+      font-size: 21px;
+      background-color: #ff6f61;
+      border-radius: 50px;
+      border: none;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 25px rgba(255, 111, 97, 0.8);
+      text-decoration: none;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .button:hover,
+    .button:focus {
+      background-color: #e64a3d;
+      box-shadow: 0 18px 40px rgba(230, 74, 61, 0.9);
+      transform: scale(1.05);
+      outline: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .categories-grid {
+        gap: 25px;
+      }
+
+      .category-card {
+        width: 100%;
+        max-width: 320px;
+        padding: 30px 20px;
+      }
+
+      #categories p {
+        font-size: 19px;
+        max-width: 100%;
+      }
+    }
+  </style>
+
+
   <!-- Featured Products -->
-  <section id="featured-products">
-    <h2>Featured Products</h2>
-    <div class="product-list">
-      <div class="product">
-        <h3>Product 1</h3>
-        <p>High quality product description.</p>
-        <button>Add to Cart</button>
+  <section id="featured-products" style="
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+  color: #fff;
+  padding: 60px 0;
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+">
+    <h2 style="font-size: 3rem; margin-bottom: 20px; text-shadow: 2px 2px 5px #000;">Featured Products</h2>
+    <div class="product-list" style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
+      <div class="product" style="
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 25px;
+      width: 280px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    ">
+        <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Smart LED Bulb</h3>
+        <p style="font-size: 1rem; color: white; margin-bottom: 20px;">
+          Energy-saving, remote controlled LED bulb with adjustable colors.</p>
+        <button style="
+        background-color: #ff6f61;
+        border: none;
+        padding: 12px 25px;
+        font-size: 1rem;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      " onmouseover="this.style.backgroundColor='#e64a3d'" onmouseout="this.style.backgroundColor='#ff6f61'">Add to
+          Cart</button>
       </div>
-      <div class="product">
-        <h3>Product 2</h3>
-        <p>Another high quality product description.</p>
-        <button>Add to Cart</button>
+      <div class="product" style="
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 25px;
+      width: 280px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    ">
+        <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Smart Plug</h3>
+        <p style="font-size: 1rem; color: white; margin-bottom: 20px;">
+          Control your home devices remotely with this easy-to-use smart plug.</p>
+        <button style="
+        background-color: #ff6f61;
+        border: none;
+        padding: 12px 25px;
+        font-size: 1rem;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      " onmouseover="this.style.backgroundColor='#e64a3d'" onmouseout="this.style.backgroundColor='#ff6f61'">Add to
+          Cart</button>
       </div>
-      <div class="product">
-        <h3>Product 3</h3>
-        <p>Yet another high quality product description.</p>
-        <button>Add to Cart</button>
+      <div class="product" style="
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 25px;
+      width: 280px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    ">
+        <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Wireless Charger</h3>
+        <p style="font-size: 1rem; color: white; margin-bottom: 20px;">
+          Fast wireless charging pad compatible with all Qi-enabled devices.</p>
+        <button style="
+        background-color: #ff6f61;
+        border: none;
+        padding: 12px 25px;
+        font-size: 1rem;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      " onmouseover="this.style.backgroundColor='#e64a3d'" onmouseout="this.style.backgroundColor='#ff6f61'">Add to
+          Cart</button>
       </div>
     </div>
   </section>
 
   <!-- Customer Testimonials -->
-  <section id="testimonials">
-    <h2>What Our Customers Are Saying</h2>
-    <div class="testimonial">
-      <p>"Excellent service! Fast delivery and great products. Highly recommend!"</p>
-      <footer>- John Doe</footer>
-    </div>
-    <div class="testimonial">
-      <p>"The installation team was professional and efficient. Very happy with the service."</p>
-      <footer>- Jane Smith</footer>
-    </div>
-    <div class="testimonial">
-      <p>"Great customer support! They helped me with all my questions."</p>
-      <footer>- Michael Brown</footer>
+  <section id="testimonials" style="
+  background-color: #fff;
+  padding: 60px 0;
+  max-width: 1100px;
+  margin: 40px auto;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  text-align: center;
+">
+    <h2 style="font-size: 2.8rem; margin-bottom: 30px; color: #333;">What Our Customers Are Saying</h2>
+    <div
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 900px; margin: 0 auto;">
+      <div class="testimonial" style="
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      font-size: 1.1rem;
+      color: rgb(252, 248, 248);
+      line-height: 1.6;
+    ">
+        <p>"Excellent service! Fast delivery and great products. Highly recommend!"</p>
+        <footer style="margin-top: 15px; font-style: italic; color: #fffcfc;">- John Doe</footer>
+      </div>
+      <div class="testimonial" style="
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      font-size: 1.1rem;
+      color: #faf5f5;
+      line-height: 1.6;
+    ">
+        <p>"The installation team was professional and efficient. Very happy with the service."</p>
+        <footer style="margin-top: 15px; font-style: italic; color: #fdf9f9;">- Jane Smith</footer>
+      </div>
+      <div class="testimonial" style="
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      font-size: 1.1rem;
+      color: #f7f7f7;
+      line-height: 1.6;
+    ">
+        <p>"Great customer support! They helped me with all my questions."</p>
+        <footer style="margin-top: 15px; font-style: italic; color: #f7f3f3;">- Michael Brown</footer>
+      </div>
     </div>
 
-    <h2>More Customer Experiences</h2>
-    <div class="testimonial">
+    <h2 style="font-size: 2.4rem; margin: 50px 0 20px; color: #f8efef;">More Customer Experiences</h2>
+    <div style="
+    background: #6b5a5e;
+    padding: 30px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    color: hwb(330 20% 24% / 0.122)2);
+    max-width: 700px;
+    margin: 0 auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  ">
       <p>"Cherie's Electrical offers the best service and products. Their team is professional and knowledgeable!"</p>
-      <footer>- Happy Customer</footer>
+      <footer style="margin-top: 10px; font-style: italic; color: #fcf9f9;">- Happy Customer</footer>
     </div>
   </section>
 
-  <!-- Latest Blog Posts -->
-  <section id="blog">
-    <h2>Latest Blog Posts</h2>
-    <div class="blog-post">
-      <h3>How to Choose the Right Electrical Appliances for Your Home</h3>
-      <p>Learn the best tips for selecting quality electrical appliances that suit your home...</p>
-      <a href="{{ url_for('blog_post', id=1) }}" class="button">Read More</a>
+  <section id="blog" style="
+  background: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+  padding: 60px 30px;
+  border-radius: 15px;
+  max-width: 1200px;
+  margin: 40px auto;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  color: #df1a1a;
+  font-family: 'Poppins', sans-serif;
+">
+    <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 30px; text-shadow: 2px 2px 6px rgba(0,0,0,0.7);">
+      Latest Blog Posts
+    </h2>
+
+    <div style="
+    background: rgba(34, 5, 5, 0.6);
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease;
+  " onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+      <h3 style="font-size: 24px; margin-bottom: 10px; font-weight: 600; color: #ffd369;">
+        How to Choose the Right Electrical Appliances for Your Home
+      </h3>
+      <p style="font-size: 16px; line-height: 1.5; color: #ddd;">
+        Learn the best tips for selecting quality electrical appliances that suit your home...
+      </p>
+      <a href="{{ url_for('blog_post', id=1) }}" style="
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 25px;
+      background-color: #ff6f61;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    " onmouseover="this.style.backgroundColor='#e64a3d'" onmouseout="this.style.backgroundColor='#ff6f61'">
+        Read More
+      </a>
     </div>
 
-    <div class="blog-post">
-      <h3>Top 10 Electrical Upgrades for Your Home</h3>
-      <p>Discover essential upgrades to improve safety, efficiency, and modernize your living space.</p>
-      <a href="{{ url_for('blog_post', id=2) }}" class="button">Read More</a>
+    <div style="
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin-bottom: 0;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease;
+  " onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+      <h3 style="font-size: 24px; margin-bottom: 10px; font-weight: 600; color: #ffd369;">
+        Top 10 Electrical Upgrades for Your Home
+      </h3>
+      <p style="font-size: 16px; line-height: 1.5; color: #ddd;">
+        Discover essential upgrades to improve safety, efficiency, and modernize your living space.
+      </p>
+      <a href="{{ url_for('blog_post', id=2) }}" style="
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 25px;
+      background-color: #ff6f61;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    " onmouseover="this.style.backgroundColor='#e64a3d'" onmouseout="this.style.backgroundColor='#ff6f61'">
+        Read More
+      </a>
     </div>
   </section>
+
 
   <!-- Newsletter Subscription -->
-  <section id="subscribe">
-    <h2>Stay Updated</h2>
-    <p>Subscribe to receive the latest offers, products, and updates.</p>
-    <div class="subscribe">
-      <form action="#" method="POST">
-        <input type="email" name="email" placeholder="Enter your email address" required>
-        <button type="submit">Subscribe</button>
-      </form>
-    </div>
+  <section id="subscribe" style="
+  background: url('https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+  padding: 60px 30px;
+  border-radius: 15px;
+  max-width: 700px;
+  margin: 50px auto 40px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+">
+    <h2 style="
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+  ">Stay Updated</h2>
+    <p style="
+    font-size: 18px;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.6);
+  ">Subscribe to receive the latest offers, products, and updates.</p>
+    <form action="#" method="POST" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 15px;">
+      <input type="email" name="email" placeholder="Enter your email address" required style="
+        flex: 1 1 300px;
+        padding: 15px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
+        transition: box-shadow 0.3s ease;
+      " onfocus="this.style.boxShadow='0 4px 15px #ff6f61'"
+        onblur="this.style.boxShadow='0 4px 15px rgba(255, 255, 255, 0.4)'">
+      <button type="submit" style="
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #ff6f61;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 6px 15px rgba(255, 111, 97, 0.6);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    " onmouseover="this.style.backgroundColor='#e64a3d'; this.style.boxShadow='0 6px 20px rgba(230, 74, 61, 0.8)'"
+        onmouseout="this.style.backgroundColor='#ff6f61'; this.style.boxShadow='0 6px 15px rgba(255, 111, 97, 0.6)'">
+        Subscribe
+      </button>
+    </form>
   </section>
 
   <!-- Support Section -->
-  <section id="support">
-    <h2>Need Help?</h2>
-    <p>Contact our friendly support team for any assistance you need.</p>
-    <a href="{{ url_for('support') }}" class="button">Get Support</a>
+  <section id="support" style="
+  background-color: #fff;
+  padding: 50px 30px;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+">
+    <h2 style="font-size: 32px; margin-bottom: 15px;">Need Help?</h2>
+    <p style="font-size: 18px; margin-bottom: 25px;">Contact our friendly support team for any assistance you need.</p>
+    <a href="{{ url_for('support') }}" class="button" style="
+    display: inline-block;
+    padding: 15px 35px;
+    background-color: #ff6f61;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  " onmouseover="this.style.backgroundColor='#e64a3d'" onmouseout="this.style.backgroundColor='#ff6f61'">
+      Get Support
+    </a>
   </section>
 
   <!-- Footer -->
-  <footer>
+  <footer style="
+  background-color: #111;
+  color: white;
+  padding: 25px 0;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+">
     <p>&copy; 2025 Cherie's Electrical and Electronics. All rights reserved.</p>
     <p>
-      <a href="{{ url_for('privacy') }}">Privacy Policy</a> |
-      <a href="{{ url_for('terms') }}">Terms of Service</a>
+      <a href="{{ url_for('privacy') }}" style="color: #ff6f61; text-decoration: none; margin: 0 10px;">Privacy
+        Policy</a> |
+      <a href="{{ url_for('terms') }}" style="color: #ff6f61; text-decoration: none; margin: 0 10px;">Terms of
+        Service</a>
     </p>
   </footer>

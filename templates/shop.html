@@ -2,22 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cherie Shop</title>
   <style>
-    body {
+    html, body {
+      height: 100%;
+      margin: 0;
       font-family: Arial, sans-serif;
+      background: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1471&q=80') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    body {
       margin: 0;
       padding: 0;
-      background-color: #f4f4f4;
+      background-color: rgba(255,255,255,0.9); /* fallback overlay */
+      position: relative;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
     header, footer {
-      background-color: #004aad;
+      background-color: rgba(0, 74, 173, 0.9);
       color: white;
       padding: 1rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-shrink: 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
     header h1 {
       margin: 0;
@@ -27,11 +42,12 @@
       display: flex;
       gap: 0.5rem;
     }
-    .filters, .products {
+    .filters, .products, .admin-panel, .orders-panel {
       padding: 1rem 2rem;
+      background: rgba(255, 255, 255, 0.9);
+      flex-shrink: 0;
     }
     .filters {
-      background-color: #fff;
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
@@ -47,6 +63,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 1rem;
+      flex-grow: 1;
+      overflow-y: auto;
     }
     .product-card {
       background: white;
@@ -56,6 +74,13 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+    }
+    .product-card img {
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      height: 150px;
+      object-fit: cover;
+      width: 100%;
     }
     .product-card h3 {
       margin: 0 0 0.5rem 0;
@@ -100,44 +125,42 @@
       border-bottom: 1px solid #eee;
       padding: 0.5rem 0;
     }
-    #cart-items::-webkit-scrollbar {
-      width: 8px;
-    }
-    #cart-items::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 4px;
-    }
-    #cart-items::-webkit-scrollbar-thumb {
-      background-color: #004aad;
-      border-radius: 4px;
-    }
-    #cart-items {
-      scrollbar-width: thin;
-      scrollbar-color: #004aad #f1f1f1;
-      max-height: 60vh;
-      overflow-y: auto;
-      margin-bottom: 1rem;
-    }
-    footer {
-      margin-top: 2rem;
-      justify-content: center;
-    }
-    .admin-panel {
+    .admin-panel, .orders-panel {
       display: none;
-      padding: 1rem 2rem;
-      background-color: #fff;
+      margin-top: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
     }
-    .admin-panel.active {
+    .admin-panel.active, .orders-panel.active {
       display: block;
     }
-    .admin-panel form input, .admin-panel form select {
-      margin: 0.5rem 0;
-      padding: 0.5rem;
-      width: 100%;
-      box-sizing: border-box;
+    footer {
+      margin-top: auto; /* push footer to bottom */
+      justify-content: center;
+      font-size: 0.9rem;
     }
-    .admin-panel h2 {
-      margin-top: 0;
+    .status-pending {
+      background: orange;
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+    .status-completed {
+      background: green;
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    /* Added style for image preview in admin */
+    #image-preview {
+      margin-top: 0.5rem;
+      max-width: 100%;
+      max-height: 150px;
+      border-radius: 6px;
+      object-fit: contain;
+      display: none;
+      border: 1px solid #ccc;
     }
   </style>
 </head>
@@ -145,8 +168,8 @@
   <header>
     <h1>Cherie Shop</h1>
     <div class="header-buttons">
-      <button class="btn" id="cart-toggle">Cart (<span id="cart-count">0</span>)</button>
-      <button class="btn" id="admin-login-btn">Admin Panel</button>
+      <button class="btn" onclick="toggleCartSidebar()">Cart (<span id="cart-count">0</span>)</button>
+      <button class="btn" onclick="toggleAdminPanel()">Admin Panel</button>
     </div>
   </header>
 
@@ -162,28 +185,37 @@
       <option value="Samsung">Samsung</option>
       <option value="Nike">Nike</option>
     </select>
-    <button class="btn" id="clear-filters">Clear Filters</button>
+    <button class="btn" onclick="clearFilters()">Clear Filters</button>
   </section>
 
   <section class="products" id="product-list"></section>
 
   <section class="admin-panel" id="admin-panel">
     <h2>Admin Panel</h2>
-    <form id="admin-form">
+    <form id="admin-form" enctype="multipart/form-data">
       <input type="text" id="product-name" placeholder="Product Name" required />
-      <input type="number" id="product-price" placeholder="Product Price" required />
-      <input type="text" id="product-category" placeholder="Category (e.g., electronics)" required />
-      <input type="text" id="product-brand" placeholder="Brand (e.g., Samsung)" required />
-      <input type="text" id="product-image" placeholder="Image URL (optional)" />
-      <button class="btn" type="submit">Add Product</button>
+      <input type="number" id="product-price" placeholder="Price" required min="0" step="0.01" />
+      <input type="text" id="product-category" placeholder="Category" required />
+      <input type="text" id="product-brand" placeholder="Brand" required />
+      <input type="number" id="product-stock" placeholder="Stock" required min="0" />
+      <!-- File input for image upload -->
+      <input type="file" id="product-image-file" accept="image/*" />
+      <img id="image-preview" alt="Image Preview" />
+      <button type="submit" class="btn">Add Product</button>
     </form>
+    <div id="admin-products"></div>
+  </section>
+
+  <section class="orders-panel" id="orders-panel">
+    <h2>Orders</h2>
+    <div id="orders-list"></div>
   </section>
 
   <aside class="cart-sidebar" id="cart-sidebar">
     <h2>Your Cart</h2>
     <div id="cart-items"></div>
     <p id="cart-total">Total: KSh 0</p>
-    <button class="btn" id="checkout-btn">Checkout</button>
+    <button class="btn" onclick="checkout()">Checkout</button>
     <button class="btn" onclick="toggleCartSidebar()">Close</button>
   </aside>
 
@@ -192,78 +224,62 @@
   </footer>
 
   <script>
-    const productListEl = document.getElementById('product-list');
-    const searchInput = document.getElementById('search');
-    const categoryFilter = document.getElementById('category-filter');
-    const brandFilter = document.getElementById('brand-filter');
-    const clearFiltersBtn = document.getElementById('clear-filters');
-    const cartSidebar = document.getElementById('cart-sidebar');
-    const cartItemsEl = document.getElementById('cart-items');
-    const cartTotalEl = document.getElementById('cart-total');
-    const cartCountEl = document.getElementById('cart-count');
-    const cartToggleBtn = document.getElementById('cart-toggle');
-    const adminPanel = document.getElementById('admin-panel');
-    const adminForm = document.getElementById('admin-form');
-
-    let products = JSON.parse(localStorage.getItem('cherie_products')) || [
-      { name: 'Samsung TV', price: 50000, category: 'electronics', brand: 'Samsung', image: '' },
-      { name: 'Nike Sneakers', price: 8000, category: 'clothing', brand: 'Nike', image: '' },
-      { name: 'Samsung Galaxy', price: 70000, category: 'electronics', brand: 'Samsung', image: '' }
-    ];
-
+    let products = JSON.parse(localStorage.getItem('cherie_products')) || [];
+    let orders = JSON.parse(localStorage.getItem('cherie_orders')) || [];
     let cart = [];
+
+    // To hold base64 image data temporarily during admin form editing
+    let currentEditingImageData = '';
 
     function saveProducts() {
       localStorage.setItem('cherie_products', JSON.stringify(products));
     }
-
-    function renderProducts() {
-      const search = searchInput.value.toLowerCase();
-      const category = categoryFilter.value;
-      const brand = brandFilter.value;
-
-      const filtered = products.filter(p => {
-        return (
-          p.name.toLowerCase().includes(search) &&
-          (!category || p.category === category) &&
-          (!brand || p.brand === brand)
-        );
-      });
-
-      productListEl.innerHTML = filtered.map((p, index) => `
-        <div class="product-card">
-          ${p.image ? `<img src="${p.image}" alt="${p.name}" style="width:100%; height:150px; object-fit:cover;">` : ''}
-          <h3>${p.name}</h3>
-          <p>KSh ${p.price.toLocaleString()}</p>
-          <button class="btn" onclick="addToCart(${index})">Add to Cart</button>
-        </div>
-      `).join('');
+    function saveOrders() {
+      localStorage.setItem('cherie_orders', JSON.stringify(orders));
     }
 
-    function addToCart(index) {
-      cart.push(products[index]);
-      renderCart();
-      showCartSidebar();
+    function renderProducts() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const category = document.getElementById('category-filter').value;
+      const brand = document.getElementById('brand-filter').value;
+      const list = document.getElementById('product-list');
+      list.innerHTML = '';
+      products.filter(p =>
+        p.name.toLowerCase().includes(search) &&
+        (!category || p.category.toLowerCase() === category.toLowerCase()) &&
+        (!brand || p.brand.toLowerCase() === brand.toLowerCase())
+      ).forEach((p, i) => {
+        const stockText = p.stock > 0 ? `${p.stock} left` : '<span style="color:red;">Out of stock</span>';
+        list.innerHTML += `
+          <div class="product-card">
+            ${p.image ? `<img src="${p.image}" alt="${p.name}">` : ''}
+            <h3>${p.name}</h3>
+            <p>KSh ${p.price.toLocaleString()}</p>
+            <p>${stockText}</p>
+            <button class="btn" onclick="addToCart(${i})" ${p.stock <= 0 ? 'disabled' : ''}>Add to Cart</button>
+          </div>`;
+      });
     }
 
     function renderCart() {
-      if (cart.length === 0) {
-        cartItemsEl.innerHTML = '<p style="text-align:center;color:#888;">Your cart is empty.</p>';
-        cartTotalEl.textContent = 'Total: KSh 0';
-        cartCountEl.textContent = 0;
-        return;
-      }
+      const items = document.getElementById('cart-items');
+      const count = document.getElementById('cart-count');
+      const total = document.getElementById('cart-total');
+      items.innerHTML = '';
+      let sum = 0;
+      cart.forEach((item, i) => {
+        items.innerHTML += `<div class='cart-item'><span>${item.name} - KSh ${item.price.toLocaleString()}</span><button class='btn' onclick='removeFromCart(${i})'>×</button></div>`;
+        sum += item.price;
+      });
+      total.textContent = `Total: KSh ${sum.toLocaleString()}`;
+      count.textContent = cart.length;
+    }
 
-      cartItemsEl.innerHTML = cart.map((item, index) => `
-        <div class="cart-item">
-          <span>${item.name} - KSh ${item.price.toLocaleString()}</span>
-          <button class="btn" onclick="removeFromCart(${index})">&times;</button>
-        </div>
-      `).join('');
-
-      const total = cart.reduce((sum, item) => sum + item.price, 0);
-      cartTotalEl.textContent = `Total: KSh ${total.toLocaleString()}`;
-      cartCountEl.textContent = cart.length;
+    function addToCart(index) {
+      if (products[index].stock <= 0) return;
+      cart.push(products[index]);
+      renderCart();
+      toggleCartSidebar();
     }
 
     function removeFromCart(index) {
@@ -272,60 +288,153 @@
     }
 
     function toggleCartSidebar() {
-      cartSidebar.classList.toggle('open');
+      document.getElementById('cart-sidebar').classList.toggle('open');
     }
 
-    function showCartSidebar() {
-      cartSidebar.classList.add('open');
+    function toggleAdminPanel() {
+      const panel = document.getElementById('admin-panel');
+      const ordersPanel = document.getElementById('orders-panel');
+      const pass = prompt("Enter admin password:");
+      if (pass === "cherieAdmin123") {
+        panel.classList.toggle('active');
+        ordersPanel.classList.toggle('active');
+        renderAdminProducts();
+        renderOrders();
+      } else alert("Wrong password");
+    }
+
+    function renderAdminProducts() {
+      const admin = document.getElementById('admin-products');
+      admin.innerHTML = products.map((p, i) => `
+        <div style='margin:10px 0;border-bottom:1px solid #ccc;padding:10px;'>
+          <strong>${p.name}</strong> - ${p.brand} - ${p.category} - KSh ${p.price.toLocaleString()} - Stock: ${p.stock}
+          <button onclick='editProduct(${i})' class='btn'>Edit</button>
+          <button onclick='deleteProduct(${i})' class='btn'>Delete</button>
+        </div>`).join('');
+    }
+
+    function editProduct(index) {
+      const p = products[index];
+      document.getElementById('product-name').value = p.name;
+      document.getElementById('product-price').value = p.price;
+      document.getElementById('product-category').value = p.category;
+      document.getElementById('product-brand').value = p.brand;
+      document.getElementById('product-stock').value = p.stock;
+
+      // Clear file input and set preview to stored base64 image
+      document.getElementById('product-image-file').value = '';
+      if (p.image) {
+        document.getElementById('image-preview').src = p.image;
+        document.getElementById('image-preview').style.display = 'block';
+        currentEditingImageData = p.image;
+      } else {
+        document.getElementById('image-preview').style.display = 'none';
+        currentEditingImageData = '';
+      }
+
+      products.splice(index, 1);
+      renderProducts();
+      renderAdminProducts();
+    }
+
+    function deleteProduct(index) {
+      if (confirm("Are you sure?")) {
+        products.splice(index, 1);
+        saveProducts();
+        renderProducts();
+        renderAdminProducts();
+      }
+    }
+
+    // Listen for image file changes and preview + convert to base64
+    document.getElementById('product-image-file').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) {
+        currentEditingImageData = '';
+        document.getElementById('image-preview').style.display = 'none';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        currentEditingImageData = event.target.result;
+        const preview = document.getElementById('image-preview');
+        preview.src = currentEditingImageData;
+        preview.style.display = 'block';
+      }
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('admin-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('product-name').value.trim();
+      const price = parseFloat(document.getElementById('product-price').value);
+      const category = document.getElementById('product-category').value.trim();
+      const brand = document.getElementById('product-brand').value.trim();
+      const stock = parseInt(document.getElementById('product-stock').value);
+
+      if (!name || isNaN(price) || !category || !brand || isNaN(stock)) {
+        alert('Please fill out all fields correctly');
+        return;
+      }
+
+      const image = currentEditingImageData || '';
+
+      products.push({ name, price, category, brand, stock, image });
+      saveProducts();
+      renderProducts();
+      renderAdminProducts();
+      e.target.reset();
+
+      // Clear image preview and current image data
+      document.getElementById('image-preview').style.display = 'none';
+      currentEditingImageData = '';
+    });
+
+    function checkout() {
+      if (cart.length === 0) return alert("Cart empty!");
+      const total = cart.reduce((a, b) => a + b.price, 0);
+      const items = cart.map(i => i.name);
+      const id = 'ORD' + (orders.length + 1).toString().padStart(3, '0');
+      orders.push({ id, items, total, status: 'pending', timestamp: new Date().toISOString() });
+      cart.forEach(c => {
+        const p = products.find(p => p.name === c.name);
+        if (p) p.stock -= 1;
+      });
+      cart = [];
+      saveOrders();
+      saveProducts();
+      renderCart();
+      renderProducts();
+      alert("Order placed!");
+    }
+
+    function renderOrders() {
+      const list = document.getElementById('orders-list');
+      list.innerHTML = orders.map((o, i) => `
+        <div style='margin:10px 0;border-bottom:1px solid #ccc;padding:10px;'>
+          <strong>${o.id}</strong> - ${o.items.join(', ')} - KSh ${o.total.toLocaleString()} -
+          <span class='${o.status === 'pending' ? 'status-pending' : 'status-completed'}'>${o.status}</span>
+          ${o.status === 'pending' ? `<button class='btn' onclick='completeOrder(${i})'>Mark as Completed</button>` : ''}
+        </div>`).join('');
+    }
+
+    function completeOrder(index) {
+      orders[index].status = 'completed';
+      saveOrders();
+      renderOrders();
     }
 
     function clearFilters() {
-      searchInput.value = '';
-      categoryFilter.value = '';
-      brandFilter.value = '';
+      document.getElementById('search').value = '';
+      document.getElementById('category-filter').value = '';
+      document.getElementById('brand-filter').value = '';
       renderProducts();
     }
 
-    document.getElementById('checkout-btn').addEventListener('click', () => {
-      if (cart.length === 0) {
-        alert("Your cart is empty. Please add products before checkout.");
-        return;
-      }
-      alert("Checkout complete! (Simulation)");
-      cart = [];
-      renderCart();
-      toggleCartSidebar();
-    });
-
-    cartToggleBtn.addEventListener('click', toggleCartSidebar);
-    clearFiltersBtn.addEventListener('click', clearFilters);
-    searchInput.addEventListener('input', renderProducts);
-    categoryFilter.addEventListener('change', renderProducts);
-    brandFilter.addEventListener('change', renderProducts);
-
-    document.getElementById('admin-login-btn').addEventListener('click', () => {
-      const password = prompt('Enter Admin Password:');
-      if (password === 'cherieAdmin123') {
-        alert('Welcome, Admin!');
-        adminPanel.classList.add('active');
-      } else {
-        alert('Incorrect password!');
-      }
-    });
-
-    adminForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('product-name').value;
-      const price = parseFloat(document.getElementById('product-price').value);
-      const category = document.getElementById('product-category').value;
-      const brand = document.getElementById('product-brand').value;
-      const image = document.getElementById('product-image').value;
-
-      products.push({ name, price, category, brand, image });
-      saveProducts();
-      renderProducts();
-      adminForm.reset();
-    });
+    // Filter on input changes
+    document.getElementById('search').addEventListener('input', renderProducts);
+    document.getElementById('category-filter').addEventListener('change', renderProducts);
+    document.getElementById('brand-filter').addEventListener('change', renderProducts);
 
     renderProducts();
     renderCart();
