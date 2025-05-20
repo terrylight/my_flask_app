@@ -1,184 +1,334 @@
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ShoppingCart } from "lucide-react";
-
-const categories = [
-  "All", "Electronics", "Clothing", "Home Appliances", "Accessories",
-  "Books", "Toys", "Beauty", "Sports", "Groceries", "Health"
-];
-
-const brands = [
-  "All", "Samsung", "Apple", "Sony", "LG", "Adidas",
-  "Nike", "HP", "Dell", "Puma", "Lenovo"
-];
-
-const products = [
-  { id: 1, name: "Samsung TV", category: "Electronics", brand: "Samsung", price: 300 },
-  { id: 2, name: "Nike Shoes", category: "Clothing", brand: "Nike", price: 120 },
-  { id: 3, name: "LG Fridge", category: "Home Appliances", brand: "LG", price: 500 },
-];
-
-const Shop = () => {
-  const [cart, setCart] = useState<any[]>([]);
-  const [filterCategory, setFilterCategory] = useState("All");
-  const [filterBrand, setFilterBrand] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [mpesaNumber, setMpesaNumber] = useState("");
-
-  const filteredProducts = products.filter((product) => {
-    const categoryMatch = filterCategory === "All" || product.category === filterCategory;
-    const brandMatch = filterBrand === "All" || product.brand === filterBrand;
-    const searchMatch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return categoryMatch && brandMatch && searchMatch;
-  });
-
-  const addToCart = (product: any) => setCart((prevCart) => [...prevCart, product]);
-  const removeFromCart = (id: number) => setCart(cart.filter((item) => item.id !== id));
-  const handleMpesaPayment = () => {
-    if (!mpesaNumber) return alert("Enter your M-PESA number");
-    alert(`STK push sent to ${mpesaNumber}. Complete payment to Till +254705855677.`);
-  };
-  const handleCardPayment = () => alert("Redirecting to secure Visa/Mastercard gateway...");
-  const handlePayPalPayment = () => alert("Redirecting to PayPal checkout...");
-
-  return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">My E-Shop</h1>
-        <div className="flex items-center gap-4">
-          <Input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search products..."
-            className="w-64"
-          />
-          <Button onClick={() => setIsAdmin(!isAdmin)} variant="outline">
-            {isAdmin ? "Switch to User" : "Switch to Admin"}
-          </Button>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
-                <ShoppingCart /> View Cart ({cart.length})
-              </Button>
-            </SheetTrigger>
-            <SheetContent>
-              <h2 className="text-xl font-semibold mb-4">Your Cart</h2>
-              {cart.map((item) => (
-                <div key={item.id} className="flex justify-between items-center mb-2">
-                  <span>{item.name}</span>
-                  <Button size="sm" variant="destructive" onClick={() => removeFromCart(item.id)}>
-                    Remove
-                  </Button>
-                </div>
-              ))}
-              <div className="mt-6 space-y-4">
-                <h3 className="text-lg font-semibold">Payment Options</h3>
-                <div>
-                  <Label>M-PESA Number:</Label>
-                  <Input
-                    value={mpesaNumber}
-                    onChange={(e) => setMpesaNumber(e.target.value)}
-                    placeholder="e.g. 07XXXXXXXX"
-                  />
-                  <Button className="mt-2 w-full" onClick={handleMpesaPayment}>
-                    Pay with MPESA
-                  </Button>
-                </div>
-                <Button variant="outline" className="w-full" onClick={handlePayPalPayment}>
-                  Pay with PayPal
-                </Button>
-                <Button variant="outline" className="w-full" onClick={handleCardPayment}>
-                  Pay with Visa/MasterCard
-                </Button>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="flex gap-4">
-        <Select value={filterCategory} onValueChange={setFilterCategory}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Select Category" />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map((cat) => (
-              <SelectItem key={cat} value={cat}>
-                {cat}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={filterBrand} onValueChange={setFilterBrand}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Select Brand" />
-          </SelectTrigger>
-          <SelectContent>
-            {brands.map((brand) => (
-              <SelectItem key={brand} value={brand}>
-                {brand}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Product Listing */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {filteredProducts.map((product) => (
-          <Card key={product.id}>
-            <CardContent className="p-4 space-y-2">
-              <h2 className="text-lg font-bold">{product.name}</h2>
-              <p className="text-sm text-muted-foreground">Brand: {product.brand}</p>
-              <p className="text-lg font-semibold">KSh {product.price}</p>
-              <Button onClick={() => addToCart(product)}>Add to Cart</Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Admin and Account Tabs */}
-      <Tabs defaultValue="user" className="w-full mt-10">
-        <TabsList className="grid grid-cols-2">
-          <TabsTrigger value="admin">Admin Dashboard</TabsTrigger>
-          <TabsTrigger value="user">User Dashboard</TabsTrigger>
-        </TabsList>
-        <TabsContent value="admin">
-          <div className="space-y-2">
-            <p>📦 View Orders</p>
-            <p>👥 Manage Customers</p>
-            <p>💳 Payment Tracking</p>
-            <p>📊 Inventory Management</p>
-            <p>⚙️ System Settings</p>
-            <p>📈 Reports & Analytics</p>
-          </div>
-        </TabsContent>
-        <TabsContent value="user">
-          <div className="space-y-2">
-            <p>🔐 Sign In / Sign Up</p>
-            <p>📦 My Orders</p>
-            <p>💬 Support Tickets</p>
-            <p>💳 Saved Payments</p>
-            <p>⚙️ Account Settings</p>
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      {/* Live Chat */}
-      <div className="fixed bottom-6 right-6">
-        <Button variant="outline">💬 Live Chat</Button>
-      </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cherie Shop</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header, footer {
+      background-color: #004aad;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.75rem;
+    }
+    .header-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .filters, .products {
+      padding: 1rem 2rem;
+    }
+    .filters {
+      background-color: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .filters input, .filters select {
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .product-card {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .product-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.2rem;
+    }
+    .btn {
+      background-color: #004aad;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #00307a;
+    }
+    .cart-sidebar {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 320px;
+      height: 100vh;
+      background: #fff;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+      padding: 1rem;
+      overflow-y: auto;
+      transition: right 0.3s ease-in-out;
+      z-index: 999;
+    }
+    .cart-sidebar.open {
+      right: 0;
+    }
+    .cart-sidebar h2 {
+      margin-top: 0;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding: 0.5rem 0;
+    }
+    #cart-items::-webkit-scrollbar {
+      width: 8px;
+    }
+    #cart-items::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+    #cart-items::-webkit-scrollbar-thumb {
+      background-color: #004aad;
+      border-radius: 4px;
+    }
+    #cart-items {
+      scrollbar-width: thin;
+      scrollbar-color: #004aad #f1f1f1;
+      max-height: 60vh;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    footer {
+      margin-top: 2rem;
+      justify-content: center;
+    }
+    .admin-panel {
+      display: none;
+      padding: 1rem 2rem;
+      background-color: #fff;
+    }
+    .admin-panel.active {
+      display: block;
+    }
+    .admin-panel form input, .admin-panel form select {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .admin-panel h2 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Cherie Shop</h1>
+    <div class="header-buttons">
+      <button class="btn" id="cart-toggle">Cart (<span id="cart-count">0</span>)</button>
+      <button class="btn" id="admin-login-btn">Admin Panel</button>
     </div>
-  );
-};
+  </header>
 
-export default Shop;
+  <section class="filters">
+    <input type="text" id="search" placeholder="Search products..." />
+    <select id="category-filter">
+      <option value="">All Categories</option>
+      <option value="electronics">Electronics</option>
+      <option value="clothing">Clothing</option>
+    </select>
+    <select id="brand-filter">
+      <option value="">All Brands</option>
+      <option value="Samsung">Samsung</option>
+      <option value="Nike">Nike</option>
+    </select>
+    <button class="btn" id="clear-filters">Clear Filters</button>
+  </section>
+
+  <section class="products" id="product-list"></section>
+
+  <section class="admin-panel" id="admin-panel">
+    <h2>Admin Panel</h2>
+    <form id="admin-form">
+      <input type="text" id="product-name" placeholder="Product Name" required />
+      <input type="number" id="product-price" placeholder="Product Price" required />
+      <input type="text" id="product-category" placeholder="Category (e.g., electronics)" required />
+      <input type="text" id="product-brand" placeholder="Brand (e.g., Samsung)" required />
+      <input type="text" id="product-image" placeholder="Image URL (optional)" />
+      <button class="btn" type="submit">Add Product</button>
+    </form>
+  </section>
+
+  <aside class="cart-sidebar" id="cart-sidebar">
+    <h2>Your Cart</h2>
+    <div id="cart-items"></div>
+    <p id="cart-total">Total: KSh 0</p>
+    <button class="btn" id="checkout-btn">Checkout</button>
+    <button class="btn" onclick="toggleCartSidebar()">Close</button>
+  </aside>
+
+  <footer>
+    <p>&copy; 2025 Cherie Shop. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const productListEl = document.getElementById('product-list');
+    const searchInput = document.getElementById('search');
+    const categoryFilter = document.getElementById('category-filter');
+    const brandFilter = document.getElementById('brand-filter');
+    const clearFiltersBtn = document.getElementById('clear-filters');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const cartItemsEl = document.getElementById('cart-items');
+    const cartTotalEl = document.getElementById('cart-total');
+    const cartCountEl = document.getElementById('cart-count');
+    const cartToggleBtn = document.getElementById('cart-toggle');
+    const adminPanel = document.getElementById('admin-panel');
+    const adminForm = document.getElementById('admin-form');
+
+    let products = JSON.parse(localStorage.getItem('cherie_products')) || [
+      { name: 'Samsung TV', price: 50000, category: 'electronics', brand: 'Samsung', image: '' },
+      { name: 'Nike Sneakers', price: 8000, category: 'clothing', brand: 'Nike', image: '' },
+      { name: 'Samsung Galaxy', price: 70000, category: 'electronics', brand: 'Samsung', image: '' }
+    ];
+
+    let cart = [];
+
+    function saveProducts() {
+      localStorage.setItem('cherie_products', JSON.stringify(products));
+    }
+
+    function renderProducts() {
+      const search = searchInput.value.toLowerCase();
+      const category = categoryFilter.value;
+      const brand = brandFilter.value;
+
+      const filtered = products.filter(p => {
+        return (
+          p.name.toLowerCase().includes(search) &&
+          (!category || p.category === category) &&
+          (!brand || p.brand === brand)
+        );
+      });
+
+      productListEl.innerHTML = filtered.map((p, index) => `
+        <div class="product-card">
+          ${p.image ? `<img src="${p.image}" alt="${p.name}" style="width:100%; height:150px; object-fit:cover;">` : ''}
+          <h3>${p.name}</h3>
+          <p>KSh ${p.price.toLocaleString()}</p>
+          <button class="btn" onclick="addToCart(${index})">Add to Cart</button>
+        </div>
+      `).join('');
+    }
+
+    function addToCart(index) {
+      cart.push(products[index]);
+      renderCart();
+      showCartSidebar();
+    }
+
+    function renderCart() {
+      if (cart.length === 0) {
+        cartItemsEl.innerHTML = '<p style="text-align:center;color:#888;">Your cart is empty.</p>';
+        cartTotalEl.textContent = 'Total: KSh 0';
+        cartCountEl.textContent = 0;
+        return;
+      }
+
+      cartItemsEl.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+          <span>${item.name} - KSh ${item.price.toLocaleString()}</span>
+          <button class="btn" onclick="removeFromCart(${index})">&times;</button>
+        </div>
+      `).join('');
+
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      cartTotalEl.textContent = `Total: KSh ${total.toLocaleString()}`;
+      cartCountEl.textContent = cart.length;
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      renderCart();
+    }
+
+    function toggleCartSidebar() {
+      cartSidebar.classList.toggle('open');
+    }
+
+    function showCartSidebar() {
+      cartSidebar.classList.add('open');
+    }
+
+    function clearFilters() {
+      searchInput.value = '';
+      categoryFilter.value = '';
+      brandFilter.value = '';
+      renderProducts();
+    }
+
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+      if (cart.length === 0) {
+        alert("Your cart is empty. Please add products before checkout.");
+        return;
+      }
+      alert("Checkout complete! (Simulation)");
+      cart = [];
+      renderCart();
+      toggleCartSidebar();
+    });
+
+    cartToggleBtn.addEventListener('click', toggleCartSidebar);
+    clearFiltersBtn.addEventListener('click', clearFilters);
+    searchInput.addEventListener('input', renderProducts);
+    categoryFilter.addEventListener('change', renderProducts);
+    brandFilter.addEventListener('change', renderProducts);
+
+    document.getElementById('admin-login-btn').addEventListener('click', () => {
+      const password = prompt('Enter Admin Password:');
+      if (password === 'cherieAdmin123') {
+        alert('Welcome, Admin!');
+        adminPanel.classList.add('active');
+      } else {
+        alert('Incorrect password!');
+      }
+    });
+
+    adminForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('product-name').value;
+      const price = parseFloat(document.getElementById('product-price').value);
+      const category = document.getElementById('product-category').value;
+      const brand = document.getElementById('product-brand').value;
+      const image = document.getElementById('product-image').value;
+
+      products.push({ name, price, category, brand, image });
+      saveProducts();
+      renderProducts();
+      adminForm.reset();
+    });
+
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>

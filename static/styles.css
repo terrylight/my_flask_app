@@ -1,10 +1,16 @@
 /* General Styles */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;
+  background: #f2f5f9;
   color: #333;
+}
+
+/* Smooth transitions */
+a,
+button {
+  transition: all 0.3s ease;
 }
 
 a {
@@ -14,154 +20,184 @@ a {
 
 /* Navigation Styles */
 nav ul {
-  list-style-type: none;
-  padding: 0;
+  list-style: none;
   margin: 0;
-  background-color: #333;
+  padding: 0;
+  background: #0d6efd;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 nav ul li {
-  display: inline-block;
   position: relative;
 }
 
 nav ul li a {
-  padding: 10px 20px;
+  padding: 15px 20px;
   display: block;
   color: #fff;
+  font-weight: 500;
 }
 
 nav ul li ul {
   display: none;
   position: absolute;
+  background: #0d6efd;
   top: 100%;
   left: 0;
-  background-color: #333;
   min-width: 180px;
+  z-index: 1000;
 }
 
-nav ul li:hover>ul {
+nav ul li:hover ul {
   display: block;
 }
 
 nav ul li a:hover {
-  background-color: #555;
+  background: #0b5ed7;
+  color: #ffd700;
 }
 
 /* Main Banner Styles */
 .main-banner {
-  background-color: #0c6c81;
-  color: white;
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.8), rgba(102, 16, 242, 0.8)), url('https://example.com/your-banner-image.jpg') no-repeat center center/cover;
+  color: #fff;
   text-align: center;
-  padding: 50px 20px;
+  padding: 80px 20px;
+  background-size: cover;
+  background-position: center;
 }
 
 .main-banner h1 {
-  font-size: 3rem;
+  font-size: 3.5rem;
+  margin-bottom: 20px;
+  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.5);
 }
 
 .main-banner p {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .shop-now {
-  padding: 10px 20px;
-  background-color: #ffd700;
+  padding: 15px 35px;
+  background: #ffd700;
   border: none;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 30px;
   cursor: pointer;
+  color: #333;
+  transition: all 0.3s ease;
 }
 
 .shop-now:hover {
-  background-color: #e5c100;
+  background: #e5c100;
+  transform: scale(1.1);
 }
 
-/* Product Categories Section */
-.product-categories {
+/* Sections */
+section {
+  padding: 60px 20px;
   text-align: center;
-  padding: 40px 20px;
-  background-color: #fff;
 }
 
-.product-categories h2 {
-  font-size: 2.5rem;
-}
-
-.browse-categories {
-  padding: 10px 20px;
-  background-color: #0c6c81;
-  border: none;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.browse-categories:hover {
-  background-color: #0b5a65;
-}
-
-/* Expert Installation Section */
-.expert-installation {
-  text-align: center;
-  padding: 40px 20px;
-  background-color: #f9f9f9;
-}
-
-.expert-installation h2 {
-  font-size: 2.5rem;
-}
-
-.learn-more {
-  padding: 10px 20px;
-  background-color: #0c6c81;
-  border: none;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.learn-more:hover {
-  background-color: #0b5a65;
-}
-
-/* Customer Support Section */
+.product-categories,
+.expert-installation,
 .customer-support {
-  text-align: center;
-  padding: 40px 20px;
-  background-color: #fff;
+  background: #fff;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.customer-support h2 {
+section h2 {
   font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #0d6efd;
 }
 
+/* Buttons */
+.browse-categories,
+.learn-more,
 .contact-support {
-  padding: 10px 20px;
-  background-color: #0c6c81;
+  padding: 12px 30px;
   border: none;
-  color: white;
   font-size: 1rem;
+  border-radius: 30px;
+  background: #0d6efd;
+  color: #fff;
   cursor: pointer;
+  margin-top: 20px;
 }
 
+.browse-categories:hover,
+.learn-more:hover,
 .contact-support:hover {
-  background-color: #0b5a65;
+  background: #0b5ed7;
+  transform: translateY(-2px);
 }
 
-/* Footer Styles */
+/* Footer */
 footer {
-  background-color: #333;
-  color: white;
+  background: #212529;
+  color: #fff;
   text-align: center;
-  padding: 20px;
+  padding: 30px 10px;
+  font-size: 0.9rem;
 }
 
 .social-media a {
-  color: white;
+  color: #fff;
   margin: 0 10px;
+  font-size: 1.2rem;
 }
 
 .social-media a:hover {
   color: #ffd700;
+  transform: scale(1.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+  }
+
+  .main-banner h1 {
+    font-size: 2.5rem;
+  }
+
+  section h2 {
+    font-size: 2rem;
+  }
+
+  .product-categories,
+  .expert-installation,
+  .customer-support {
+    padding: 20px;
+    margin-bottom: 15px;
+  }
+}
+/* Scrollbar styling for the cart items */
+#cart-items {
+  /* already scrollable max-height */
+  scrollbar-width: thin;
+  scrollbar-color: #004aad #f1f1f1;
+}
+
+#cart-items::-webkit-scrollbar {
+  width: 8px;
+}
+
+#cart-items::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+#cart-items::-webkit-scrollbar-thumb {
+  background-color: #004aad;
+  border-radius: 4px;
 }

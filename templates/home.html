@@ -7,8 +7,13 @@
   <meta name="description"
     content="Cherie's Electrical and Electronics - High-quality electrical products and professional services.">
   <title>Cherie's Electrical and Electronics</title>
+
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Your Custom Stylesheet -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
   <style>
     /* Add some base styles */
     body {
@@ -262,19 +267,21 @@
 
   <!-- Hero Section -->
   <section id="hero">
-    <div>
+    <div class="main-banner">
       <h1>Welcome to Cherie's Electrical and Electronics</h1>
-      <p>Your one-stop shop for high-quality electrical products and professional services.</p>
-      <a href="{{ url_for('shop') }}" class="button">Shop Now</a>
+      <p>Your trusted source for high-quality electrical products and professional services.</p>
+      <button class="shop-now">Shop Now</button>
     </div>
+
   </section>
 
-  <!-- Product Categories -->
+  <!-- Product Categories Section -->
   <section id="categories">
     <h2>Product Categories</h2>
     <p>Explore our wide range of electrical and electronic products.</p>
     <a href="{{ url_for('shop') }}" class="button">Browse Categories</a>
   </section>
+
   <!-- Featured Products -->
   <section id="featured-products">
     <h2>Featured Products</h2>
